@@ -1,28 +1,38 @@
 import java.util.HashSet;
 
-public class User {
+public class User implements UserComposite {
 	private String userId;
+	private UserGroup group;
 	private HashSet<String> followers;
 	private HashSet<String> followings;
+	private String[] tweets;
 	
-	public User(String id) {
+	public User(String id, UserGroup g) {
 		userId = id;
+		group = g;
+		group.addChild(this);
 		followers = new HashSet<String>();
 		followings = new HashSet<String>();
+		tweets = new String[0];
 	}
 	
-	public String getUserId() {
+	public String getName() {
 		return userId;
 	}
 	
-	public void setUserId(String id) {
-		userId = id;
+	public String getGroup() {
+		return group.getName();
 	}
+	
+	public void setGroup(UserGroup g) {
+		group = g;
+	}
+	
 	public boolean follow(String id) {
 		return followings.add(id);
 	}
 	
-	public boolean unfollow(String id) {
-		return followings.remove(id);
+	public boolean isLeaf() {
+		return true;
 	}
  }
