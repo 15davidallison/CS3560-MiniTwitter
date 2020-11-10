@@ -50,4 +50,8 @@ public class UserGroup implements UserComposite {
 	public DefaultMutableTreeNode getNode() {
 		return node;
 	}
+	
+	public String toString() {
+		return groupId;
+	}
 }

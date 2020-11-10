@@ -49,4 +49,8 @@ public class User implements UserComposite {
 	public DefaultMutableTreeNode getNode() {
 		return node;
 	}
+	
+	public String toString() {
+		return userId;
+	}
  }
