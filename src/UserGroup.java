@@ -1,9 +1,12 @@
 import java.util.HashSet;
+import javax.swing.tree.DefaultMutableTreeNode;
+
 
 public class UserGroup implements UserComposite {
 	private String groupId;
 	private UserGroup group = null;
 	private HashSet<UserComposite> children;
+	public DefaultMutableTreeNode node;
 	
 	public UserGroup(String id) {
 		groupId = id;
@@ -38,5 +41,13 @@ public class UserGroup implements UserComposite {
 			return "Root";
 		}
 		return group.getName();
+	}
+	
+	public void setNode(DefaultMutableTreeNode n) {
+		node = n;
+	}
+
+	public DefaultMutableTreeNode getNode() {
+		return node;
 	}
 }
