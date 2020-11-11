@@ -33,16 +33,34 @@ public class UserTree {
 	}
 	
 	private LinkedList<SysEntry> getAllEntries() {
-		return DFS(root, new LinkedList<SysEntry>());
+		return mapTree(root, new LinkedList<SysEntry>());
 	}
 	
-	private LinkedList<SysEntry> DFS(DefaultMutableTreeNode root, LinkedList<SysEntry> listSoFar) {
+	private LinkedList<SysEntry> mapTree(DefaultMutableTreeNode root, LinkedList<SysEntry> listSoFar) {
 		listSoFar.add((SysEntry)root.getUserObject());
 		int numChildren = root.getChildCount();
 		for (int i = 0; i < numChildren; i++) {
-			listSoFar = DFS((DefaultMutableTreeNode)root.getChildAt(i), listSoFar);
+			listSoFar = mapTree((DefaultMutableTreeNode)root.getChildAt(i), listSoFar);
 		}
 		return listSoFar;
+	}
+	
+	public DefaultMutableTreeNode findUser(String name) {
+		return DFS(root, name);
+	}
+	
+	private DefaultMutableTreeNode DFS(DefaultMutableTreeNode root, String name) {
+		if (root.toString().equals(name)) {
+			return root;
+		} 
+		int numChildren = root.getChildCount();
+		for (int i = 0; i < numChildren; i++) {
+			DefaultMutableTreeNode childResult = DFS((DefaultMutableTreeNode)root.getChildAt(i), name);
+			if (childResult != null) {
+				return childResult;
+			}
+		}
+		return null;
 	}
 	
 	/**

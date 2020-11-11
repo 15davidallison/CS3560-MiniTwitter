@@ -11,11 +11,13 @@ public class UserView {
 	private DefaultMutableTreeNode userNode;
 	private User user;
 	private UserTree data;
+	private DefaultListModel<String> feedModel;
 	
 	public UserView(DefaultMutableTreeNode subject, UserTree fullData) {
 		data = fullData;
 		userNode = subject;
 		user = (User)userNode.getUserObject();
+		user.setUserView(this);
 		launchPanel();
 	}
 	
@@ -57,6 +59,7 @@ public class UserView {
 					if(user.follow(followCandidate)) { // successfully added
 						messageCenter.setText("Successfully followed " + followCandidate + ".");
 						model.addElement(followCandidate);
+						((User)data.findUser(followCandidate).getUserObject()).attach(user);
 					} else { // already following candidate
 						messageCenter.setText("You are already following " + followCandidate + ".");
 					}
@@ -70,7 +73,7 @@ public class UserView {
 		// set up feed view
 	    JPanel feedPanel = new JPanel();
 		feedPanel.setLayout(new FlowLayout());
-		DefaultListModel<String> feedModel = new DefaultListModel<String>();
+		feedModel = new DefaultListModel<String>();
 		JList<String> feedList = new JList<String>(feedModel);
 		JScrollPane feedView = new JScrollPane(feedList);
 		feedPanel.add(feedView);
@@ -90,7 +93,7 @@ public class UserView {
 					return;
 				}
 				user.postTweet(tweetCandidate);
-				feedModel.addElement(" - " + user.toString() + ": " + tweetCandidate);
+				user.notifyObservers(tweetCandidate);
 				messageCenter.setText("Successfully posted tweet!");
 				tweetArea.setText("");
 			}
@@ -113,5 +116,9 @@ public class UserView {
 		
 		userFrame.add(messageCenter);
 		userFrame.setVisible(true); 
+	}
+	
+	public void addToFeed(String userId, String tweet) {
+		feedModel.add(0, " - " + userId + ": " + tweet);
 	}
 }

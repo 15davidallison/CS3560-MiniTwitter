@@ -1,5 +1,7 @@
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import javax.swing.DefaultListModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class User extends Subject implements SysEntry,Observer  {
@@ -8,6 +10,7 @@ public class User extends Subject implements SysEntry,Observer  {
 	private HashSet<String> followings;
 	private LinkedList<String> tweets;
 	public DefaultMutableTreeNode node;
+	private UserView userView;
 	
 	public User(String id, UserGroup g) {
 		userId = id;
@@ -15,7 +18,8 @@ public class User extends Subject implements SysEntry,Observer  {
 		group.addChild(this);
 		followings = new HashSet<String>();
 		tweets = new LinkedList<String>();
-		followings.add(userId); // automatically follow yourself
+		follow(userId); // automatically follow yourself
+		attach(this);
 	}
 	
 	public boolean follow(String id) {
@@ -49,5 +53,13 @@ public class User extends Subject implements SysEntry,Observer  {
 
 	public int accept(SysEntryVisitor visitor) {
 		return visitor.visit(this);
+	}
+	
+	public void setUserView(UserView uv) {
+		userView = uv;
+	}
+
+	public void update(Subject subject, String tweet) {
+		userView.addToFeed(((User)subject).toString(), tweet);
 	}
  }
