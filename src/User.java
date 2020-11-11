@@ -1,56 +1,53 @@
 import java.util.HashSet;
+import java.util.LinkedList;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class User implements UserComposite {
+public class User extends Subject implements SysEntry,Observer  {
 	private String userId;
 	private UserGroup group;
-	private HashSet<String> followers;
 	private HashSet<String> followings;
-	private String[] tweets;
+	private LinkedList<String> tweets;
 	public DefaultMutableTreeNode node;
 	
 	public User(String id, UserGroup g) {
 		userId = id;
 		group = g;
 		group.addChild(this);
-		followers = new HashSet<String>();
 		followings = new HashSet<String>();
-		tweets = new String[0];
-	}
-	
-	public String getName() {
-		return userId;
-	}
-	
-	public String getGroup() {
-		return group.getName();
-	}
-	
-	public void setGroup(UserGroup g) {
-		group = g;
+		tweets = new LinkedList<String>();
+		followings.add(userId); // automatically follow yourself
 	}
 	
 	public boolean follow(String id) {
 		return followings.add(id);
 	}
 	
+	public String[] getFollowings() {
+		Object[] objArr = followings.toArray();
+		String[] strArr = new String[objArr.length];
+		for (int i = 0; i < objArr.length; i++) {
+			strArr[i] = (String)objArr[i];
+		}
+		return strArr;
+	}
+	
 	public int numTweets() {
-		return tweets.length;
+		return tweets.size();
 	}
 	
-	public boolean isLeaf() {
-		return true;
+	public LinkedList<String> getTweets() {
+		return tweets;
 	}
 	
-	public void setNode(DefaultMutableTreeNode n) {
-		node = n;
-	}
-
-	public DefaultMutableTreeNode getNode() {
-		return node;
+	public void postTweet(String tweet) {
+		tweets.add(tweet);
 	}
 	
 	public String toString() {
 		return userId;
+	}
+
+	public int accept(SysEntryVisitor visitor) {
+		return visitor.visit(this);
 	}
  }

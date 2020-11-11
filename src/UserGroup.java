@@ -2,56 +2,38 @@ import java.util.HashSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
-public class UserGroup implements UserComposite {
+public class UserGroup implements SysEntry {
 	private String groupId;
-	private UserGroup group = null;
-	private HashSet<UserComposite> children;
+	private UserGroup group;
+	private HashSet<SysEntry> children;
 	public DefaultMutableTreeNode node;
 	
 	public UserGroup(String id) {
 		groupId = id;
-		children = new HashSet<UserComposite>();
+		group = null;
+		children = new HashSet<SysEntry>();
 	}
 	
 	public UserGroup(String id, UserGroup parent) {
 		groupId = id;
 		group = parent;
 		parent.addChild(this);
-		children = new HashSet<UserComposite>();
+		children = new HashSet<SysEntry>();
 	}
 	
-	public String getName() {
-		return groupId;
-	}
-	
-	public void addChild(UserComposite u) {
+	public void addChild(SysEntry u) {
 		children.add(u);
 	}
 	
-	public HashSet<UserComposite> getChildren() {
+	public HashSet<SysEntry> getChildren() {
 		return children;
-	}
-	
-	public boolean isLeaf() {
-		return false;
-	}
-	
-	public String getGroup() {
-		if (group == null) {
-			return "Root";
-		}
-		return group.getName();
-	}
-	
-	public void setNode(DefaultMutableTreeNode n) {
-		node = n;
-	}
-
-	public DefaultMutableTreeNode getNode() {
-		return node;
 	}
 	
 	public String toString() {
 		return groupId;
+	}
+
+	public int accept(SysEntryVisitor visitor) {
+		return visitor.visit(this);
 	}
 }
