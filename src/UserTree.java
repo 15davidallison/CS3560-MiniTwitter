@@ -1,4 +1,7 @@
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.ListIterator;
+
 import javax.swing.*;  
 import javax.swing.tree.*;
 
@@ -29,18 +32,79 @@ public class UserTree {
 		return root;
 	}
 	
+	private LinkedList<SysEntry> getAllEntries() {
+		return DFS(root, new LinkedList<SysEntry>());
+	}
+	
+	private LinkedList<SysEntry> DFS(DefaultMutableTreeNode root, LinkedList<SysEntry> listSoFar) {
+		listSoFar.add((SysEntry)root.getUserObject());
+		int numChildren = root.getChildCount();
+		for (int i = 0; i < numChildren; i++) {
+			listSoFar = DFS((DefaultMutableTreeNode)root.getChildAt(i), listSoFar);
+		}
+		return listSoFar;
+	}
+	
 	/**
 	 * @return Size of nameList (number of total users in tree)
 	 */
 	public int getNumUsers() {
-		return listNames.size();
+		int count = 0;
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			count += i.next().accept(new NumUsersVisitor());
+		}
+		return count;
 	}
 	
 	/**
 	 * @return Size of groupList (number of total groups in tree)
 	 */
 	public int getNumGroups() {
-		return listGroups.size();
+		int count = 0;
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			count += i.next().accept(new NumGroupsVisitor());
+		}
+		return count;
+	}
+	
+	public int getNumTweets() {
+		int count = 0;
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			count += i.next().accept(new NumTweetsVisitor());
+		}
+		return count;
+	}
+	
+	public int percentGoodTweets() {
+		int goodTweets = 0;
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			goodTweets += i.next().accept(new NumPosTweetsVisitor());
+		}
+		
+		int totalTweets = getNumTweets();
+		if (totalTweets != 0) {
+			double percent = (double)goodTweets/(double)totalTweets;
+			int intVal = (int)(percent*100);
+			return intVal;
+		}
+		return 0;
+	}
+	
+	/**
+	 * @param user: a String to be tested for existence
+	 * @return: true if user corresponds to a valid name in listNames
+	 * 		  	false if user can be added
+	 */
+	public boolean validateUser(String user) {
+		return listNames.contains(user);
 	}
 	
 	/**
