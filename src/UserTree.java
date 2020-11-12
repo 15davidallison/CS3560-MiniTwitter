@@ -1,3 +1,8 @@
+/**
+ * @author David Allison
+ * Tree structure to hold all tree nodes and generate a JTree with this info.
+ * Also helps in implementation of visitor pattern
+ */
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;

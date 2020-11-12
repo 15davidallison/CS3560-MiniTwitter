@@ -18,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 public class AdminControlPanel {
 	private static AdminControlPanel pointer; 
 	private DefaultMutableTreeNode currentNodeSelection;
