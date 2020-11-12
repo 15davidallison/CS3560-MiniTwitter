@@ -1,9 +1,12 @@
-import java.util.HashSet;
+/**
+ * @author David Allison
+ * @description Instantiation of this class launches a Java Swing UI for
+ * 				performing user-specific MiniTwitter tasks.
+ */
 
 import javax.swing.*;  
 import javax.swing.tree.*;
 
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,6 +16,11 @@ public class UserView {
 	private UserTree data;
 	private DefaultListModel<String> feedModel;
 	
+	/**
+	 * UserView Constructor
+	 * @param subject: the tree node corresponding to a user. This node MUST hold a User object
+	 * @param fullData: a reference to the tree to which the node belongs, used for traversal
+	 */
 	public UserView(DefaultMutableTreeNode subject, UserTree fullData) {
 		data = fullData;
 		userNode = subject;
@@ -21,18 +29,24 @@ public class UserView {
 		launchPanel();
 	}
 	
-	public void launchPanel() {
+	/**
+	 * Launches the UserView panel for a specified user.
+	 * This method is automatically called by the constructor
+	 */
+	private void launchPanel() {
+		// create new frame
 		JFrame userFrame = new JFrame("User View: " + user);
-		userFrame.setSize(800,600);
-		userFrame.setLayout(new FlowLayout());
+		userFrame.setResizable(false);
+		userFrame.setBounds(100, 100, 362, 466);
+		userFrame.setLayout(null);
 		
 		// set up message center
-	    JTextArea messageCenter = new JTextArea(1,40);
-	    messageCenter.setEditable(false); 
+		JTextArea messageCenter = new JTextArea();
+		messageCenter.setEditable(false);
+		messageCenter.setBounds(10, 397, 331, 22);
+		userFrame.add(messageCenter);
 	    
 	    // set up list view
-	    JPanel followingPanel = new JPanel();
-		followingPanel.setLayout(new FlowLayout());
 		
 		// convert existing data (if any) into the model
 		DefaultListModel<String> model = new DefaultListModel<String>();
@@ -41,13 +55,21 @@ public class UserView {
 			model.addElement(sourceData[i]);
 		}
 		
+		JScrollPane followingView = new JScrollPane();
+		followingView.setBounds(10, 47, 331, 103);
+		userFrame.add(followingView);
 		JList<String> followingList = new JList<String>(model);
-		JScrollPane followingView = new JScrollPane(followingList);
-		followingPanel.add(followingView);
+		followingView.setViewportView(followingList);
+		
+		JLabel listLabel = new JLabel("  Currently Following:");
+		followingView.setColumnHeaderView(listLabel);
 		
 	    // set up follow field and button
-		JTextArea userArea = new JTextArea(1,10);
+		JTextArea userArea = new JTextArea();
+		userArea.setBounds(10, 13, 150, 20);
+		userFrame.add(userArea);
 		JButton followUser = new JButton("Follow User");
+		followUser.setBounds(191, 12, 150, 23);
 		followUser.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 				String followCandidate = userArea.getText();
@@ -69,18 +91,28 @@ public class UserView {
 				userArea.setText("");
 			}
 		});
+		userFrame.add(followUser);
 		
 		// set up feed view
-	    JPanel feedPanel = new JPanel();
-		feedPanel.setLayout(new FlowLayout());
 		feedModel = new DefaultListModel<String>();
 		JList<String> feedList = new JList<String>(feedModel);
 		JScrollPane feedView = new JScrollPane(feedList);
-		feedPanel.add(feedView);
+		feedView.setBounds(10, 283, 331, 103);
+		feedView.setViewportView(feedList);
+		userFrame.add(feedView);
+		JLabel newsFeedLabel = new JLabel("  News Feed:");
+		feedView.setColumnHeaderView(newsFeedLabel);
 		
 		// set up tweet posting area
-		JTextArea tweetArea = new JTextArea(4,40);
+		JLabel promptLabel = new JLabel("What's on your mind?");
+		promptLabel.setBounds(10, 161, 127, 14);
+		userFrame.add(promptLabel);
+		
+		JTextArea tweetArea = new JTextArea();
+		tweetArea.setBounds(10, 179, 331, 59);
+		userFrame.add(tweetArea);
 		JButton postTweet = new JButton("Post Tweet");
+		postTweet.setBounds(191, 249, 150, 23);
 		postTweet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String tweetCandidate = tweetArea.getText();
@@ -98,26 +130,19 @@ public class UserView {
 				tweetArea.setText("");
 			}
 		});
+		userFrame.add(postTweet);
 		
-
-		JPanel followPanel = new JPanel();
-		followPanel.add(userArea);
-		followPanel.add(followUser);
-		userFrame.add(followPanel);
-		
-		userFrame.add(followingPanel);
-		
-		JPanel tweetPanel = new JPanel();
-		tweetPanel.add(tweetArea);
-		tweetPanel.add(postTweet);
-		userFrame.add(tweetPanel);
-		
-		userFrame.add(feedPanel);
-		
-		userFrame.add(messageCenter);
+		// set frame to visible
 		userFrame.setVisible(true); 
 	}
 	
+	
+	/** 
+	 * Helper function for posting tweets. Users keep a reference to their
+	 * UserView so this method can be called by a user.
+	 * @param userId: the user that posted the message
+	 * @param tweet: the message to be posted to the feed
+	 */
 	public void addToFeed(String userId, String tweet) {
 		feedModel.add(0, " - " + userId + ": " + tweet);
 	}

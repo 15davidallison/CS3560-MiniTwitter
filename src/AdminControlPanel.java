@@ -1,3 +1,10 @@
+/**
+ * @author David Allison
+ * @description Instantiation of this class launches a Java Swing UI for
+ * 				performing admin level MiniTwitter tasks. Can only be 
+ * 				instantiated a single time (singleton).
+ */
+
 import javax.swing.*;  
 import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -5,7 +12,6 @@ import javax.swing.event.TreeSelectionListener;
 
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +25,9 @@ public class AdminControlPanel {
 	private DefaultMutableTreeNode root;
 	private UserTree userTree;
 	
+	/**
+	 * @return the singleton instance of AdminControlPanel
+	 */
 	public static AdminControlPanel getInstance() {
 		if (pointer == null) {
 			pointer = new AdminControlPanel();
@@ -26,32 +35,48 @@ public class AdminControlPanel {
 		return pointer;
 	}
 	
+	/**
+	 * Private constructor for use with singleton pattern
+	 */
 	private AdminControlPanel() {
 		userTree = new UserTree();
 		userTree.fillWithDummyData();
 		root = userTree.getRoot();
 	}
 	
+	/**
+	 * Launches the admin control panel for MiniTwitter
+	 */
 	public void launchPanel() {
 		// set up admin frame
 		JFrame adminFrame = new JFrame("Admin Control Panel");
-		adminFrame.setSize(800,600);
-	    adminFrame.setLayout(new FlowLayout());
+		adminFrame.setResizable(false);
+		adminFrame.setBounds(100, 100, 540, 423);
+	    adminFrame.getContentPane().setLayout(null);
 	    adminFrame.addWindowListener(new WindowAdapter() {
 	    	public void windowClosing(WindowEvent windowEvent){
 	    		System.exit(0);
 	    	}        
 	    });
 	    
+	    
 	    // set up message center
-	    JTextArea messageCenter = new JTextArea(1,50);
-	    messageCenter.setEditable(false); 
+	    JTextArea messageCenter = new JTextArea();
+	    messageCenter.setBounds(10, 360, 510, 20);
+	    adminFrame.getContentPane().add(messageCenter);
+	    messageCenter.setEditable(false);
+	    adminFrame.add(messageCenter);
 	    
 	    // set up tree panel
-	    JPanel treePanel = new JPanel();
-	    treePanel.setLayout(new FlowLayout());
+	    JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 265, 343);
+		adminFrame.add(scrollPane);
+		
+		JLabel lblNewLabel = new JLabel("  Users");
+		scrollPane.setColumnHeaderView(lblNewLabel);
 	    
 	    JTree tree = userTree.getJTree();
+	    scrollPane.setViewportView(tree);
 	    for (int i = 0; i < tree.getRowCount(); i++) {
 	    	   tree.expandRow(i);
 	    	}
@@ -67,15 +92,21 @@ public class AdminControlPanel {
 	        }
 	    });
 	    DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-	    JScrollPane treeView = new JScrollPane(tree);
-	    treePanel.add(treeView);
 	    
 	    // Set up buttons
+	    JPanel buttonPanel = new JPanel();
+	    buttonPanel.setBounds(282, 11, 246, 70);
+		adminFrame.add(buttonPanel);
+		buttonPanel.setLayout(null);
+	    
 	    JTextArea userArea = new JTextArea(1,10);
+	    userArea.setBounds(10, 11, 106, 20);
+	    buttonPanel.add(userArea);
+	    
 	    JButton addUser = new JButton("Add User");
+	    addUser.setBounds(126, 10, 110, 23);
 	    addUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DefaultMutableTreeNode parentNode;
 				DefaultMutableTreeNode result;
 				if (userArea.getText().equals("")) {
 					messageCenter.setText("Invalid Username!");
@@ -83,7 +114,6 @@ public class AdminControlPanel {
 				}
 				if (currentNodeSelection != null && 
 						currentNodeSelection.getUserObject() instanceof UserGroup) {
-					parentNode = currentNodeSelection;
 					result = userTree.addUser(userArea.getText(), currentNodeSelection);
 				} else {
 					result = userTree.addUser(userArea.getText());
@@ -98,12 +128,16 @@ public class AdminControlPanel {
 				currentNodeSelection = (DefaultMutableTreeNode)model.getRoot();
 			}
 	    });
+	    buttonPanel.add(addUser);
 	    
 	    JTextArea groupArea = new JTextArea(1,10);
+	    groupArea.setBounds(10, 39, 106, 20);
+	    buttonPanel.add(groupArea);
+	    
 	    JButton addGroup = new JButton("Add Group");
+	    addGroup.setBounds(126, 38, 110, 23);
 	    addGroup.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		DefaultMutableTreeNode parentNode;
 	    		DefaultMutableTreeNode result;
 				if (groupArea.getText().equals("")) {
 					messageCenter.setText("Invalid group name!");
@@ -111,7 +145,6 @@ public class AdminControlPanel {
 				}
 				if (currentNodeSelection != null && 
 						currentNodeSelection.getUserObject() instanceof UserGroup) {
-					parentNode = currentNodeSelection;
 					result = userTree.addGroup(groupArea.getText(), currentNodeSelection);
 				} else {
 					result = userTree.addGroup(groupArea.getText());
@@ -126,9 +159,10 @@ public class AdminControlPanel {
 				currentNodeSelection = (DefaultMutableTreeNode)model.getRoot();
 		    }
 	    });
+	    buttonPanel.add(addGroup);
 	    
 	    JButton openUser = new JButton("Open User View");
-	    openUser.setPreferredSize(new Dimension(400, 30));
+	    openUser.setBounds(292, 91, 226, 23);
 	    openUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (currentNodeSelection != null && currentNodeSelection.toString() != null && 
@@ -139,37 +173,56 @@ public class AdminControlPanel {
 	    		}
 			}
 		});
-	    
-	    // add all 
-	    adminFrame.add(treePanel);
-	    JPanel userPanel = new JPanel();
-	    userPanel.add(userArea);
-	    userPanel.add(addUser);
-	    adminFrame.add(userPanel);
-	    
-	    JPanel groupPanel = new JPanel();
-	    groupPanel.add(groupArea);
-	    groupPanel.add(addGroup);
-	    adminFrame.add(groupPanel);
-	    
 	    adminFrame.add(openUser);
 	    
-	    JPanel dialogPanel = new JPanel();
-	    dialogPanel.add(dialogButton(adminFrame, "Total Number of Users",
-	    		"Number of users: ", new NumUsers(userTree)));
-	    dialogPanel.add(dialogButton(adminFrame, "Total Number of Groups",
-	    		"Number of groups: ", new NumGroups(userTree)));
-	    dialogPanel.add(dialogButton(adminFrame, "Total Number of Tweets",
-	    		"Number of Tweets: ", new NumTweets(userTree)));
-	    dialogPanel.add(dialogButton(adminFrame, "Positive Percentage of Tweets",
-	    		"Percentage of Tweets that are positive: ", new PercentPosTweets(userTree)));
-	    adminFrame.add(dialogPanel);
-	   
-	    adminFrame.add(messageCenter);
+	    // set up visitor controlled buttons
+	    JButton numUsers = dialogButton(adminFrame, "Total Number of Users",
+	    		"Number of users: ", new NumUsers(userTree));
+	    JPanel panel1 = new JPanel();
+	    panel1.setBounds(285, 189, 243, 33);
+	    panel1.setLayout(null);
+	    panel1.add(numUsers);
+	    adminFrame.add(panel1);
+	    
+	    JButton numGroups = dialogButton(adminFrame, "Total Number of Groups",
+	    		"Number of groups: ", new NumGroups(userTree));
+	    JPanel panel2 = new JPanel();
+	    panel2.setBounds(285, 233, 243, 33);
+	    panel2.setLayout(null);
+	    panel2.add(numGroups);
+	    adminFrame.add(panel2);
+	    
+	    JButton numTweets = dialogButton(adminFrame, "Total Number of Tweets",
+	    		"Number of Tweets: ", new NumTweets(userTree));
+	    JPanel panel3 = new JPanel();
+	    panel3.setBounds(285, 277, 243, 33);
+	    panel3.setLayout(null);
+	    panel3.add(numTweets);
+	    adminFrame.add(panel3);
+	    
+	    JButton percentPos = dialogButton(adminFrame, "Positive Percentage of Tweets",
+	    		"Percentage of Tweets that are positive: ", new PercentPosTweets(userTree));
+	    JPanel panel4 = new JPanel();
+	    panel4.setBounds(285, 321, 243, 33);
+	    panel4.setLayout(null);
+	    panel4.add(percentPos);
+	    adminFrame.add(panel4);
+	    
 	    adminFrame.setVisible(true); 
+
 	}
 	
-	public JButton dialogButton(JFrame owner, String title, String desc, StatType data) {
+	/**
+	 * Button generator function: creates a button which, when clicked, launches a dialog
+	 * window.
+	 * @param owner: the JFrame which to associate the button
+	 * @param title: the header text for the dialog window
+	 * @param desc: the text to be displayed in the dialog window
+	 * @param data: takes in a object that implements the StatType interface.
+	 * 				contains the method getData() as a way to pass a function into this method. 
+	 * @return the newly created button
+	 */
+	private JButton dialogButton(JFrame owner, String title, String desc, StatType data) {
 		JButton button = new JButton(title);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -180,9 +233,15 @@ public class AdminControlPanel {
 		    	d.setVisible(true);
 			}
 		});
+		button.setBounds(10, 5, 223, 23);
 		return button;
 	}
 	
+	/**
+	 * @author David Allison
+	 * @description Implements a DefaultTreeCellRenderer to make groups show up as file icons
+	 * 				in tree view
+	 */
 	private static class customTreeRenderer extends DefaultTreeCellRenderer {
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, 
 				boolean expanded, boolean leaf, int row, boolean hasFocus) {
