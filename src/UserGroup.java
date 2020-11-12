@@ -1,6 +1,9 @@
+/**
+ * @author David Allison
+ * Composite SysEntry containing other UserGroups or Users
+ */
 import java.util.HashSet;
 import javax.swing.tree.DefaultMutableTreeNode;
-
 
 public class UserGroup implements SysEntry {
 	private String groupId;
@@ -8,31 +11,56 @@ public class UserGroup implements SysEntry {
 	private HashSet<SysEntry> children;
 	public DefaultMutableTreeNode node;
 	
+	/**
+	 * Constructor for UserGroup with no parents (useful for creating root)
+	 * @param id: name for this group
+	 */
 	public UserGroup(String id) {
 		groupId = id;
 		group = null;
 		children = new HashSet<SysEntry>();
 	}
 	
+	/**
+	 * Overloaded constructor for UserGroup to specify name and parent group
+	 * @param id: name of group
+	 * @param parent: parent group
+	 */
 	public UserGroup(String id, UserGroup parent) {
 		groupId = id;
 		group = parent;
-		parent.addChild(this);
+		parent.addChild(this); // automatically associate this group with its parent
 		children = new HashSet<SysEntry>();
 	}
 	
+	/**
+	 * @param u: SysEntry to add to this UserGroup as a child
+	 */
 	public void addChild(SysEntry u) {
 		children.add(u);
 	}
 	
+	/**
+	 * @return all children for this group
+	 */
 	public HashSet<SysEntry> getChildren() {
 		return children;
 	}
 	
+	/**
+	 * Overrides SysEntry.toString() and Object.toString()
+	 * @return name of this UserGroup
+	 */
+	@Override
 	public String toString() {
 		return groupId;
 	}
 
+	/**
+	 * Method to implement visitor pattern, inherited from Visitable
+	 * @return the integer value determined by the visitor for this UserGroup
+	 */
+	@Override
 	public int accept(SysEntryVisitor visitor) {
 		return visitor.visit(this);
 	}

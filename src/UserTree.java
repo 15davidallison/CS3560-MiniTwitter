@@ -11,14 +11,18 @@ public class UserTree {
 	DefaultMutableTreeNode root;
 	private JTree tree;
 	
+	/**
+	 * Constructor which automatically places "Root" at the root of the tree
+	 */
 	public UserTree() {
 		listNames = new HashSet<String>();
 		listGroups = new HashSet<String>();
-		root = addGroup("Root"); // tree is automatically created with a root folder
+		root = addGroup("Root");
 		tree = new JTree(root);
 	}
 	
-	/**
+	/** 
+	 * Method to gather JTree for rendering in the UI
 	 * @return UserTree.tree
 	 */
 	public JTree getJTree() {
@@ -32,10 +36,20 @@ public class UserTree {
 		return root;
 	}
 	
+	/**
+	 * Helper function for visitor pattern to return a list of all nodes in UserTree
+	 * @return: LinkedList of all entries in tree
+	 */
 	private LinkedList<SysEntry> getAllEntries() {
 		return mapTree(root, new LinkedList<SysEntry>());
 	}
 	
+	/**
+	 * Helper function for visitor pattern to return a list of all nodes in UserTree
+	 * @param root: root of tree to traverse down from
+	 * @param listSoFar: LinkedList to accumulate entries to
+	 * @return LinkedList of all entries in tree
+	 */
 	private LinkedList<SysEntry> mapTree(DefaultMutableTreeNode root, LinkedList<SysEntry> listSoFar) {
 		listSoFar.add((SysEntry)root.getUserObject());
 		int numChildren = root.getChildCount();
@@ -45,10 +59,22 @@ public class UserTree {
 		return listSoFar;
 	}
 	
+	/**
+	 * Finds a given user in the tree. Utilizes depth-first-search
+	 * @param name: name to find in this UserTree
+	 * @return: node containing target user or null if user is not in tree
+	 */
 	public DefaultMutableTreeNode findUser(String name) {
 		return DFS(root, name);
 	}
 	
+	
+	/**
+	 * Depth-First-Search to find node corresponding to a given user name, utility for findUser
+	 * @param root: root of tree to traverse down from
+	 * @param name: name to search for
+	 * @return: node containing target user or null if user is not in tree
+	 */
 	private DefaultMutableTreeNode DFS(DefaultMutableTreeNode root, String name) {
 		if (root.toString().equals(name)) {
 			return root;
@@ -64,7 +90,8 @@ public class UserTree {
 	}
 	
 	/**
-	 * @return Size of nameList (number of total users in tree)
+	 * Method to use visitor pattern to determine total number of users
+	 * @return number of users in UserTree
 	 */
 	public int getNumUsers() {
 		int count = 0;
@@ -77,7 +104,8 @@ public class UserTree {
 	}
 	
 	/**
-	 * @return Size of groupList (number of total groups in tree)
+	 * Method to use visitor pattern to determine total number of groups
+	 * @return number of groups in UserTree
 	 */
 	public int getNumGroups() {
 		int count = 0;
@@ -89,6 +117,10 @@ public class UserTree {
 		return count;
 	}
 	
+	/**
+	 * Method to use visitor pattern to determine total number of tweets
+	 * @return number of tweets for all users in UserTree
+	 */
 	public int getNumTweets() {
 		int count = 0;
 		LinkedList<SysEntry> allEntries = getAllEntries();
@@ -99,6 +131,10 @@ public class UserTree {
 		return count;
 	}
 	
+	/**
+	 * Method to use visitor pattern to determine positive percentage of tweets
+	 * @return integer percentage (0-100)% of tweets in UserTree that meet positive criteria 
+	 */
 	public int percentGoodTweets() {
 		int goodTweets = 0;
 		LinkedList<SysEntry> allEntries = getAllEntries();
