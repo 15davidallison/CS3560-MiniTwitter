@@ -45,6 +45,7 @@ public class UserView {
 		messageCenter.setEditable(false);
 		messageCenter.setBounds(10, 397, 331, 22);
 		userFrame.add(messageCenter);
+		messageCenter.setText("Creation Time: " + user.getPrettyCreationTime());
 	    
 	    // set up list view
 		

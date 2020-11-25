@@ -5,4 +5,6 @@
  */
 public interface SysEntry extends Visitable {
 	public String toString();
+	public long getCreationTime();
+	public String getPrettyCreationTime();
 }

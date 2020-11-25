@@ -4,12 +4,15 @@
  */
 import java.util.HashSet;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class UserGroup implements SysEntry {
 	private String groupId;
 	private UserGroup group;
 	private HashSet<SysEntry> children;
 	public DefaultMutableTreeNode node;
+	private long creationTime;
 	
 	/**
 	 * Constructor for UserGroup with no parents (useful for creating root)
@@ -19,6 +22,7 @@ public class UserGroup implements SysEntry {
 		groupId = id;
 		group = null;
 		children = new HashSet<SysEntry>();
+		creationTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -29,6 +33,7 @@ public class UserGroup implements SysEntry {
 	public UserGroup(String id, UserGroup parent) {
 		groupId = id;
 		group = parent;
+		creationTime = System.currentTimeMillis();
 		parent.addChild(this); // automatically associate this group with its parent
 		children = new HashSet<SysEntry>();
 	}
@@ -63,5 +68,23 @@ public class UserGroup implements SysEntry {
 	@Override
 	public int accept(SysEntryVisitor visitor) {
 		return visitor.visit(this);
+	}
+
+	/**
+	 * @return the creation time of this User
+	 */
+	@Override
+	public long getCreationTime() {
+		return creationTime;
+	}
+	
+	/**
+	 * @return a formatted string of creation time of this User
+	 */
+	@Override
+	public String getPrettyCreationTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");    
+		Date resultDate = new Date(creationTime);
+		return sdf.format(resultDate);
 	}
 }

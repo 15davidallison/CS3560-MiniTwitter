@@ -5,6 +5,8 @@
  */
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -15,6 +17,7 @@ public class User extends Subject implements SysEntry,Observer  {
 	private LinkedList<String> tweets;
 	public DefaultMutableTreeNode node;
 	private UserView userView;
+	private long creationTime;
 	
 	/**
 	 * Constructor that creates a User. Automatically follows self
@@ -24,6 +27,7 @@ public class User extends Subject implements SysEntry,Observer  {
 	public User(String id, UserGroup g) {
 		userId = id;
 		group = g;
+		creationTime = System.currentTimeMillis();
 		group.addChild(this);
 		followings = new HashSet<String>();
 		tweets = new LinkedList<String>();
@@ -108,5 +112,24 @@ public class User extends Subject implements SysEntry,Observer  {
 	 */
 	public void update(Subject subject, String tweet) {
 		userView.addToFeed(((User)subject).toString(), tweet);
+	}
+
+	
+	/**
+	 * @return the creation time of this User
+	 */
+	@Override
+	public long getCreationTime() {
+		return creationTime;
+	}
+	
+	/**
+	 * @return a formatted string of creation time of this User
+	 */
+	@Override
+	public String getPrettyCreationTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");    
+		Date resultDate = new Date(creationTime);
+		return sdf.format(resultDate);
 	}
  }
