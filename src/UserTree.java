@@ -158,6 +158,21 @@ public class UserTree {
 	}
 	
 	/**
+	 * Method to use visitor pattern to determine if all names are valid
+	 * @return true if all names are valid, false otherwise
+	 */
+	public boolean validateNames() {
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			if (i.next().accept(new NameValidatorVisitor()) == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * @param user: a String to be tested for existence
 	 * @return: true if user corresponds to a valid name in listNames
 	 * 		  	false if user can be added

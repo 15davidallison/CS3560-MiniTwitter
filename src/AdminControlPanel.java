@@ -45,6 +45,7 @@ public class AdminControlPanel {
 	
 	/**
 	 * Launches the admin control panel for MiniTwitter
+	 * @wbp.parser.entryPoint
 	 */
 	public void launchPanel() {
 		// set up admin frame
@@ -64,12 +65,12 @@ public class AdminControlPanel {
 	    messageCenter.setBounds(10, 360, 510, 20);
 	    adminFrame.getContentPane().add(messageCenter);
 	    messageCenter.setEditable(false);
-	    adminFrame.add(messageCenter);
+	    adminFrame.getContentPane().add(messageCenter);
 	    
 	    // set up tree panel
 	    JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 265, 343);
-		adminFrame.add(scrollPane);
+		adminFrame.getContentPane().add(scrollPane);
 		
 		JLabel lblNewLabel = new JLabel("  Users");
 		scrollPane.setColumnHeaderView(lblNewLabel);
@@ -95,7 +96,7 @@ public class AdminControlPanel {
 	    // Set up buttons
 	    JPanel buttonPanel = new JPanel();
 	    buttonPanel.setBounds(282, 11, 246, 70);
-		adminFrame.add(buttonPanel);
+		adminFrame.getContentPane().add(buttonPanel);
 		buttonPanel.setLayout(null);
 	    
 	    JTextArea userArea = new JTextArea(1,10);
@@ -172,16 +173,34 @@ public class AdminControlPanel {
 	    		}
 			}
 		});
-	    adminFrame.add(openUser);
+	    adminFrame.getContentPane().add(openUser);
 	    
 	    // set up visitor controlled buttons
+	    JButton idVerify = new JButton("Validate IDs");
+	    idVerify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JDialog d = new JDialog(adminFrame, "Validate IDs");
+		    	JLabel l = new JLabel("All IDs are valid: " + userTree.validateNames());
+		    	d.getContentPane().setLayout(new FlowLayout());
+		    	d.getContentPane().add(l);
+		    	d.setVisible(true);
+			}
+		});
+	    idVerify.setBounds(10, 5, 223, 23);
+		JPanel panel0 = new JPanel();
+		panel0.setBounds(285, 145, 243, 33);
+	    panel0.setLayout(null);
+	    panel0.add(idVerify);
+	    adminFrame.getContentPane().add(panel0);
+	    
+	    
 	    JButton numUsers = dialogButton(adminFrame, "Total Number of Users",
 	    		"Number of users: ", new NumUsers(userTree));
 	    JPanel panel1 = new JPanel();
 	    panel1.setBounds(285, 189, 243, 33);
 	    panel1.setLayout(null);
 	    panel1.add(numUsers);
-	    adminFrame.add(panel1);
+	    adminFrame.getContentPane().add(panel1);
 	    
 	    JButton numGroups = dialogButton(adminFrame, "Total Number of Groups",
 	    		"Number of groups: ", new NumGroups(userTree));
@@ -189,7 +208,7 @@ public class AdminControlPanel {
 	    panel2.setBounds(285, 233, 243, 33);
 	    panel2.setLayout(null);
 	    panel2.add(numGroups);
-	    adminFrame.add(panel2);
+	    adminFrame.getContentPane().add(panel2);
 	    
 	    JButton numTweets = dialogButton(adminFrame, "Total Number of Tweets",
 	    		"Number of Tweets: ", new NumTweets(userTree));
@@ -197,7 +216,7 @@ public class AdminControlPanel {
 	    panel3.setBounds(285, 277, 243, 33);
 	    panel3.setLayout(null);
 	    panel3.add(numTweets);
-	    adminFrame.add(panel3);
+	    adminFrame.getContentPane().add(panel3);
 	    
 	    JButton percentPos = dialogButton(adminFrame, "Positive Percentage of Tweets",
 	    		"Percentage of Tweets that are positive: ", new PercentPosTweets(userTree));
@@ -205,7 +224,7 @@ public class AdminControlPanel {
 	    panel4.setBounds(285, 321, 243, 33);
 	    panel4.setLayout(null);
 	    panel4.add(percentPos);
-	    adminFrame.add(panel4);
+	    adminFrame.getContentPane().add(panel4);
 	    
 	    adminFrame.setVisible(true); 
 
@@ -227,8 +246,8 @@ public class AdminControlPanel {
 			public void actionPerformed(ActionEvent e) {
 				JDialog d = new JDialog(owner, title);
 		    	JLabel l = new JLabel(desc + data.getData());
-		    	d.setLayout(new FlowLayout());
-		    	d.add(l);
+		    	d.getContentPane().setLayout(new FlowLayout());
+		    	d.getContentPane().add(l);
 		    	d.setVisible(true);
 			}
 		});
