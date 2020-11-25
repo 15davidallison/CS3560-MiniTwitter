@@ -18,6 +18,7 @@ public class User extends Subject implements SysEntry,Observer  {
 	public DefaultMutableTreeNode node;
 	private UserView userView;
 	private long creationTime;
+	private long lastUpdated = 0;
 	
 	/**
 	 * Constructor that creates a User. Automatically follows self
@@ -75,6 +76,7 @@ public class User extends Subject implements SysEntry,Observer  {
 	 * @param tweet: message to be posted as a tweet
 	 */
 	public void postTweet(String tweet) {
+		lastUpdated = System.currentTimeMillis();
 		tweets.add(tweet);
 	}
 	
@@ -131,5 +133,26 @@ public class User extends Subject implements SysEntry,Observer  {
 		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");    
 		Date resultDate = new Date(creationTime);
 		return sdf.format(resultDate);
+	}
+	
+	/**
+	 * @return the last time this user tweeted
+	 * 		   or 0 if the user has never tweeted
+	 */
+	public long getLastUpdated() {
+		return lastUpdated;
+	}
+	
+	/**
+	 * @return a formatted string of the last time this user tweeted
+	 */
+	public String getPrettyLastUpdated() {
+		if (lastUpdated == 0) {
+			return "Never.";
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");    
+			Date resultDate = new Date(lastUpdated);
+			return sdf.format(resultDate);
+		}
 	}
  }

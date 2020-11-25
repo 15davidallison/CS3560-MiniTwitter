@@ -37,15 +37,16 @@ public class UserView {
 		// create new frame
 		JFrame userFrame = new JFrame("User View: " + user);
 		userFrame.setResizable(false);
-		userFrame.setBounds(100, 100, 362, 466);
+		userFrame.setBounds(100, 100, 362, 476);
 		userFrame.setLayout(null);
 		
 		// set up message center
 		JTextArea messageCenter = new JTextArea();
 		messageCenter.setEditable(false);
-		messageCenter.setBounds(10, 397, 331, 22);
+		messageCenter.setBounds(10, 397, 331, 44);
 		userFrame.add(messageCenter);
-		messageCenter.setText("Creation Time: " + user.getPrettyCreationTime());
+		messageCenter.setText("Creation Time: " + user.getPrettyCreationTime() + 
+				"\nLast update from user: " + user.getPrettyLastUpdated());
 	    
 	    // set up list view
 		
