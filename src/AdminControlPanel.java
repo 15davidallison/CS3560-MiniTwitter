@@ -188,16 +188,15 @@ public class AdminControlPanel {
 		});
 	    idVerify.setBounds(10, 5, 223, 23);
 		JPanel panel0 = new JPanel();
-		panel0.setBounds(285, 145, 243, 33);
+		panel0.setBounds(285, 171, 243, 33);
 	    panel0.setLayout(null);
 	    panel0.add(idVerify);
 	    adminFrame.getContentPane().add(panel0);
 	    
-	    
 	    JButton numUsers = dialogButton(adminFrame, "Total Number of Users",
 	    		"Number of users: ", new NumUsers(userTree));
 	    JPanel panel1 = new JPanel();
-	    panel1.setBounds(285, 189, 243, 33);
+	    panel1.setBounds(285, 201, 243, 33);
 	    panel1.setLayout(null);
 	    panel1.add(numUsers);
 	    adminFrame.getContentPane().add(panel1);
@@ -205,7 +204,7 @@ public class AdminControlPanel {
 	    JButton numGroups = dialogButton(adminFrame, "Total Number of Groups",
 	    		"Number of groups: ", new NumGroups(userTree));
 	    JPanel panel2 = new JPanel();
-	    panel2.setBounds(285, 233, 243, 33);
+	    panel2.setBounds(285, 231, 243, 33);
 	    panel2.setLayout(null);
 	    panel2.add(numGroups);
 	    adminFrame.getContentPane().add(panel2);
@@ -213,7 +212,7 @@ public class AdminControlPanel {
 	    JButton numTweets = dialogButton(adminFrame, "Total Number of Tweets",
 	    		"Number of Tweets: ", new NumTweets(userTree));
 	    JPanel panel3 = new JPanel();
-	    panel3.setBounds(285, 277, 243, 33);
+	    panel3.setBounds(285, 261, 243, 33);
 	    panel3.setLayout(null);
 	    panel3.add(numTweets);
 	    adminFrame.getContentPane().add(panel3);
@@ -221,10 +220,27 @@ public class AdminControlPanel {
 	    JButton percentPos = dialogButton(adminFrame, "Positive Percentage of Tweets",
 	    		"Percentage of Tweets that are positive: ", new PercentPosTweets(userTree));
 	    JPanel panel4 = new JPanel();
-	    panel4.setBounds(285, 321, 243, 33);
+	    panel4.setBounds(285, 291, 243, 33);
 	    panel4.setLayout(null);
 	    panel4.add(percentPos);
 	    adminFrame.getContentPane().add(panel4);
+	    
+	    JButton mostRecent = new JButton("Most Recent User");
+	    mostRecent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JDialog d = new JDialog(adminFrame, "Most Recent User");
+		    	JLabel l = new JLabel("The most recent user to post: " + userTree.mostRecent());
+		    	d.getContentPane().setLayout(new FlowLayout());
+		    	d.getContentPane().add(l);
+		    	d.setVisible(true);
+			}
+		});
+	    mostRecent.setBounds(10, 5, 223, 23);
+		JPanel panel5 = new JPanel();
+		panel5.setBounds(285, 321, 243, 33);
+	    panel5.setLayout(null);
+	    panel5.add(mostRecent);
+	    adminFrame.getContentPane().add(panel5);
 	    
 	    adminFrame.setVisible(true); 
 

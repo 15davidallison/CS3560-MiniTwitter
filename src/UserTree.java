@@ -173,6 +173,23 @@ public class UserTree {
 	}
 	
 	/**
+	 * Method to use visitor pattern to determine the most recent user to post a tweet
+	 * @return the userID of the most recent user to post
+	 */
+	public String mostRecent() {
+		String result = "null";
+		LinkedList<SysEntry> allEntries = getAllEntries();
+		ListIterator<SysEntry> i = allEntries.listIterator();
+		while (i.hasNext()) {
+			SysEntry next = i.next();
+			if (next.accept(new mostRecentVisitor()) == 1) {
+				result = next.toString();
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * @param user: a String to be tested for existence
 	 * @return: true if user corresponds to a valid name in listNames
 	 * 		  	false if user can be added
