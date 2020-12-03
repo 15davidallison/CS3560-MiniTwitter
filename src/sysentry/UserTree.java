@@ -1,3 +1,5 @@
+package sysentry;
+import visitor.*;
 /**
  * @author David Allison
  * Tree structure to hold all tree nodes and generate a JTree with this info.

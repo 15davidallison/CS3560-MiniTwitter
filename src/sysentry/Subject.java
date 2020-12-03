@@ -1,3 +1,4 @@
+package sysentry;
 /**
  * @author David Allison
  * Used in observer pattern in order to handle notifying a list of followers

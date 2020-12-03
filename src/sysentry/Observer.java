@@ -1,3 +1,4 @@
+package sysentry;
 
 /**
  * @author David Allison

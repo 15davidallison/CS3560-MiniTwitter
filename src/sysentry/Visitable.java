@@ -1,3 +1,6 @@
+package sysentry;
+
+import visitor.SysEntryVisitor;
 
 /**
  * @author David Allison

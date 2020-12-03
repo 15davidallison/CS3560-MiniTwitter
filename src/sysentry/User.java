@@ -1,3 +1,7 @@
+package sysentry;
+import ui.UserView;
+import visitor.SysEntryVisitor;
+
 /**
  * @author David Allison
  * User type of SysEntry in a UserTree. Represents a single active user

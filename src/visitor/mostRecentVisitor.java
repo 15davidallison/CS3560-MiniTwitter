@@ -1,3 +1,5 @@
+package visitor;
+import sysentry.*;
 /**
  * @author David Allison
  * Visitor responsible for finding the most recent visitor

@@ -1,3 +1,5 @@
+package sysentry;
+import visitor.SysEntryVisitor;
 /**
  * @author David Allison
  * Composite SysEntry containing other UserGroups or Users

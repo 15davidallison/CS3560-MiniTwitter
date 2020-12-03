@@ -1,3 +1,4 @@
+package ui;
 /**
  * @author David Allison
  * Simple driver class to run MiniTwitter

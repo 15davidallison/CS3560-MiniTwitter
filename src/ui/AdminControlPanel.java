@@ -1,3 +1,7 @@
+package ui;
+import sysentry.*;
+import stat.*;
+
 /**
  * @author David Allison
  * @description Instantiation of this class launches a Java Swing UI for
